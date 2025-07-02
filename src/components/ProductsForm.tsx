@@ -1,5 +1,5 @@
 import { useState, useEffect, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "./Button";
 import { Input } from "./Input";
 import { useProduct } from "../hooks/useProducts";
@@ -11,6 +11,7 @@ type FormProps = {
 };
 
 export function Form({ isEditMode, initialData }: FormProps) {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { registerProduct, updateProduct, categories, isLoading } =
     useProduct();
@@ -55,7 +56,12 @@ export function Form({ isEditMode, initialData }: FormProps) {
 
     try {
       if (isEditMode) {
-        await updateProduct(data);
+        const payloadParaAtualizar = {
+          id: Number(id),
+          ...data,
+        };
+
+        await updateProduct(payloadParaAtualizar);
       } else {
         await registerProduct(data);
       }

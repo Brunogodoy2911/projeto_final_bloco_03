@@ -46,7 +46,7 @@ export function NewProduct() {
 
         <div className="flex items-center gap-3 mt-4 mb-6">
           {isEditMode ? (
-            <Edit size={32} className="text-blue-600" />
+            <Edit size={32} className="text-green-600" />
           ) : (
             <Package size={32} className="text-green-600" />
           )}

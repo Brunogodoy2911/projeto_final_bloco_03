@@ -25,7 +25,7 @@ export function Category({ data, ...rest }: CategoryCardProps) {
   }
 
   function handleEdit() {
-    navigate(`/editProduct/${data.id}`);
+    navigate(`/editCategory/${data.id}`);
   }
 
   return (
