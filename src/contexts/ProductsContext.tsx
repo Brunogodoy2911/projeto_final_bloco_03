@@ -12,8 +12,11 @@ type ProductContext = {
   category: Categoria;
   setCategory: (category: Categoria) => void;
   registerProduct: (data: RegisterProductData) => Promise<void>;
-  deleteProduct: (productId: number) => Promise<void>;
   updateProduct: (data: RegisterProductData) => Promise<void>;
+  deleteProduct: (productId: number) => Promise<void>;
+  addCategory: (data: CategoryFormData) => Promise<void>;
+  updateCategory: (id: number, data: CategoryFormData) => Promise<void>;
+  deleteCategory: (categoryId: number) => Promise<void>;
 };
 
 const productSchema = z.object({
@@ -35,7 +38,15 @@ const productSchema = z.object({
     .optional(),
 });
 
+const categorySchema = z.object({
+  nome: z.string().min(3, {
+    message: "O nome da categoria deve ter no mínimo 3 caracteres.",
+  }),
+});
+
 type RegisterProductData = z.infer<typeof productSchema>;
+
+type CategoryFormData = z.infer<typeof categorySchema>;
 
 export const ProductContext = createContext({} as ProductContext);
 
@@ -171,6 +182,64 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function addCategory(data: CategoryFormData) {
+    try {
+      setIsLoading(true);
+      const validatedData = categorySchema.parse(data);
+      await api.post("/categorias", validatedData);
+      alert("Categoria cadastrada com sucesso!");
+      fetchCategories();
+    } catch (e) {
+      if (e instanceof ZodError) {
+        alert(e.errors[0].message);
+      } else {
+        alert("Não foi possível cadastrar a categoria.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function updateCategory(id: number, data: CategoryFormData) {
+    try {
+      setIsLoading(true);
+      const validatedData = categorySchema.parse(data);
+      await api.put("/categorias", { id, ...validatedData });
+      alert("Categoria atualizada com sucesso!");
+      fetchCategories();
+    } catch (e) {
+      if (e instanceof ZodError) {
+        alert(e.errors[0].message);
+      } else {
+        alert("Não foi possível atualizar a categoria.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function deleteCategory(categoryId: number) {
+    if (
+      window.confirm(
+        "Tem certeza que deseja deletar esta categoria? Isso pode afetar produtos existentes."
+      )
+    ) {
+      try {
+        setIsLoading(true);
+        await api.delete(`/categorias/${categoryId}`);
+        alert("Categoria deletada com sucesso!");
+        fetchCategories();
+        fetchProducts();
+      } catch (e) {
+        alert(
+          "Não foi possível deletar a categoria. Verifique se não há produtos associados a ela."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -191,6 +260,9 @@ export function ProductProvider({ children }: { children: ReactNode }) {
         registerProduct,
         deleteProduct,
         updateProduct,
+        addCategory,
+        deleteCategory,
+        updateCategory,
       }}
     >
       {children}

@@ -1,8 +1,8 @@
 import { useState, useEffect, type FormEvent } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { Button } from "./Button";
 import { Input } from "./Input";
-import { useProduct } from "../hooks/usePrtoducts";
+import { useProduct } from "../hooks/useProducts";
 import type { Product } from "../models/products";
 
 type FormProps = {
@@ -11,7 +11,6 @@ type FormProps = {
 };
 
 export function Form({ isEditMode, initialData }: FormProps) {
-  const { id } = useParams();
   const navigate = useNavigate();
   const { registerProduct, updateProduct, categories, isLoading } =
     useProduct();

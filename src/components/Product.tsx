@@ -4,7 +4,7 @@ import { Badge, type BadgeVariant } from "./Badge";
 import { Edit, Star, Trash } from "lucide-react";
 import { formatCurrency } from "../utils/formatCurrency";
 import { Button } from "./Button";
-import { useProduct } from "../hooks/usePrtoducts";
+import { useProduct } from "../hooks/useProducts";
 import { useNavigate } from "react-router";
 
 const placeholderImage =
@@ -19,7 +19,7 @@ function isBadgeVariant(value: string): value is BadgeVariant {
 }
 
 export function Product({ data, ...rest }: Props) {
-  const { deleteProduct, updateProduct } = useProduct();
+  const { deleteProduct } = useProduct();
 
   const navigate = useNavigate();
 

@@ -1,10 +1,10 @@
 import { Loader } from "lucide-react";
 import { useProduct } from "../hooks/useProducts";
-import { Product } from "./Product";
 import { EmptyList } from "./EmptyList";
+import { Category } from "./Category";
 
-export function ProductsList() {
-  const { products, isLoading } = useProduct();
+export function CategoryList() {
+  const { categories, isLoading } = useProduct();
 
   return (
     <>
@@ -12,17 +12,17 @@ export function ProductsList() {
         <div className="w-full h-screen flex justify-center items-center">
           <Loader size={30} className="animate-spin" />
         </div>
-      ) : products.length > 0 ? (
+      ) : categories.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <Product key={product.id} data={product} />
+          {categories.map((category) => (
+            <Category key={category.id} data={category} />
           ))}
         </div>
       ) : (
         <EmptyList
-          title="Nenhum produto encontrado"
-          description="Comece adicionando seu primeiro produto"
-          titleButton="Adicionar Primeiro Produto"
+          title="Nenhuma categoria encontrada"
+          description="Comece criando sua primeira categoria de produtos"
+          titleButton="Criar Primeira Categoria"
         />
       )}
     </>
