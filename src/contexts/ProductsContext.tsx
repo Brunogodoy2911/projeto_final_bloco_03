@@ -53,7 +53,6 @@ export const ProductContext = createContext({} as ProductContext);
 export function ProductProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Categoria[]>([]);
-  const [productsByCategory, setProductsByCategory] = useState<Product[]>([]);
   const [category, setCategory] = useState<Categoria>({
     id: 0,
     nome: "Todos",
@@ -103,40 +102,40 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function fetchProductsByCategory() {
-    try {
-      setIsLoading(true);
-      if (category.nome === "Todos") {
-        const response = await api.get("/produtos");
-        setProductsByCategory(response.data ?? []);
-        return;
-      }
-      const response = await api.get(`/categorias/nome/${category.nome}`);
-      if (response.data && response.data.length > 0) {
-        const categoryObject = response.data[0];
-        const productsWithoutCategory = categoryObject.produto;
-        const productsWithCategory = productsWithoutCategory.map(
-          (product: Product) => ({
-            ...product,
-            categoria: {
-              tipo: categoryObject.tipo,
-            },
-          })
-        );
-        setProductsByCategory(productsWithCategory);
-      } else {
-        setProductsByCategory([]);
-      }
-    } catch (e) {
-      console.log(e);
-      if (e instanceof AxiosError) {
-        return alert(e.response?.data.message);
-      }
-      alert("Não foi possível carregar os produtos pela categoria!");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  // async function fetchProductsByCategory() {
+  //   try {
+  //     setIsLoading(true);
+  //     if (category.nome === "Todos") {
+  //       const response = await api.get("/produtos");
+  //       // Filtro Futuramente
+  //       return;
+  //     }
+  //     const response = await api.get(`/categorias/nome/${category.nome}`);
+  //     if (response.data && response.data.length > 0) {
+  //       const categoryObject = response.data[0];
+  //       const productsWithoutCategory = categoryObject.produto;
+  //       const productsWithCategory = productsWithoutCategory.map(
+  //         (product: Product) => ({
+  //           ...product,
+  //           categoria: {
+  //             tipo: categoryObject.tipo,
+  //           },
+  //         })
+  //       );
+  //       setProductsByCategory(productsWithCategory);
+  //     } else {
+  //       setProductsByCategory([]);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //     if (e instanceof AxiosError) {
+  //       return alert(e.response?.data.message);
+  //     }
+  //     alert("Não foi possível carregar os produtos pela categoria!");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
   async function deleteProduct(productId: number) {
     try {
@@ -245,9 +244,9 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    fetchProductsByCategory();
-  }, [category.nome]);
+  // useEffect(() => {
+  //   fetchProductsByCategory();
+  // }, [category.nome]);
 
   return (
     <ProductContext.Provider
