@@ -1,4 +1,5 @@
 import { Github, Linkedin, Pill } from "lucide-react";
+import { NavLink } from "react-router";
 
 export function Footer() {
   return (
@@ -19,11 +20,18 @@ export function Footer() {
 
           <div className="flex space-x-4">
             <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-700 cursor-pointer transition-colors">
-              <Github size={20} className="text-white" />
+              <NavLink target="_blank" to="https://github.com/Brunogodoy2911">
+                <Github size={20} className="text-white" />
+              </NavLink>
             </div>
 
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 cursor-pointer transition-colors">
-              <Linkedin size={20} className="text-white" />
+              <NavLink
+                target="_blank"
+                to="https://www.linkedin.com/in/brunogodoydev/"
+              >
+                <Linkedin size={20} className="text-white" />
+              </NavLink>
             </div>
           </div>
         </div>
