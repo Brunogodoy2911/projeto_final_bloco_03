@@ -4,6 +4,8 @@ import { Badge, type BadgeVariant } from "./Badge";
 import { Edit, Star, Trash } from "lucide-react";
 import { formatCurrency } from "../utils/formatCurrency";
 import { Button } from "./Button";
+import { useProduct } from "../hooks/usePrtoducts";
+import { useNavigate } from "react-router";
 
 const placeholderImage =
   "https://ik.imagekit.io/brunogodoy/placeholder.jpg?updatedAt=1751288384316";
@@ -17,6 +19,10 @@ function isBadgeVariant(value: string): value is BadgeVariant {
 }
 
 export function Product({ data, ...rest }: Props) {
+  const { deleteProduct, updateProduct } = useProduct();
+
+  const navigate = useNavigate();
+
   const imageSrc =
     data.foto && data.foto.startsWith("http") ? data.foto : placeholderImage;
 
@@ -56,10 +62,17 @@ export function Product({ data, ...rest }: Props) {
             </h1>
 
             <div className="flex justify-center items-center gap-2">
-              <Button variant="outline" className="px-4">
+              <Button
+                variant="outline"
+                className="px-4"
+                onClick={() => navigate(`/editProduct/${data.id}`)}
+              >
                 <Edit />
               </Button>
-              <Button className="px-4 bg-red-500">
+              <Button
+                className="px-4 bg-red-500 hover:bg-red-700"
+                onClick={() => deleteProduct(data.id)}
+              >
                 <Trash />
               </Button>
             </div>

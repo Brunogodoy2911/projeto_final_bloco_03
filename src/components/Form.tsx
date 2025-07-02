@@ -1,18 +1,36 @@
-import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect, type FormEvent } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "./Button";
 import { Input } from "./Input";
-import { AxiosError } from "axios";
 import { useProduct } from "../hooks/usePrtoducts";
+import type { Product } from "../models/products";
 
-export function Form() {
-  const { registerProduct, categories, isLoading } = useProduct();
+type FormProps = {
+  isEditMode: boolean;
+  initialData: Product | null;
+};
+
+export function Form({ isEditMode, initialData }: FormProps) {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { registerProduct, updateProduct, categories, isLoading } =
+    useProduct();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [photo, setPhoto] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      setName(initialData.nome);
+      setPrice(initialData.preco);
+      setPhoto(initialData.foto || "");
+      if (initialData.categoria) {
+        setSelectedCategoryId(initialData.categoria.id.toString());
+      }
+    }
+  }, [isEditMode, initialData]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -37,14 +55,14 @@ export function Form() {
     };
 
     try {
-      await registerProduct(data);
-      alert("Produto cadastrado com sucesso!");
+      if (isEditMode) {
+        await updateProduct(data);
+      } else {
+        await registerProduct(data);
+      }
       navigate("/products");
     } catch (e) {
-      if (e instanceof AxiosError) {
-        return alert(e.response?.data.message);
-      }
-      alert("Não foi possível realizar o cadastro");
+      console.error("Falha ao submeter formulário:", e);
     }
   }
 
@@ -56,6 +74,7 @@ export function Form() {
           placeholder="Digite o nome do produto"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          disabled={isLoading}
         />
         <Input
           type="number"
@@ -63,6 +82,7 @@ export function Form() {
           placeholder="Digite o valor do produto"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
+          disabled={isLoading}
         />
 
         <div className="flex flex-col gap-2">
@@ -71,9 +91,10 @@ export function Form() {
           </label>
           <select
             id="categoria"
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
             value={selectedCategoryId}
             onChange={(e) => setSelectedCategoryId(e.target.value)}
+            disabled={isLoading || categories.length === 0}
           >
             <option value="" disabled>
               Selecione uma categoria
@@ -91,14 +112,20 @@ export function Form() {
           placeholder="https://exemplo.com/foto.jpg"
           value={photo}
           onChange={(e) => setPhoto(e.target.value)}
+          disabled={isLoading}
         />
 
         <div className="flex justify-center items-center gap-3">
-          <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate(-1)}
+            disabled={isLoading}
+          >
             Cancelar
           </Button>
-          <Button isLoading={isLoading} type="submit">
-            Cadastrar Produto
+          <Button type="submit" isLoading={isLoading}>
+            {isEditMode ? "Salvar Alterações" : "Cadastrar Produto"}
           </Button>
         </div>
       </form>

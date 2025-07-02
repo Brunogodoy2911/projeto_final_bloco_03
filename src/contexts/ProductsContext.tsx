@@ -12,9 +12,12 @@ type ProductContext = {
   category: Categoria;
   setCategory: (category: Categoria) => void;
   registerProduct: (data: RegisterProductData) => Promise<void>;
+  deleteProduct: (productId: number) => Promise<void>;
+  updateProduct: (data: RegisterProductData) => Promise<void>;
 };
 
 const productSchema = z.object({
+  id: z.number().optional(),
   nome: z
     .string()
     .min(3, { message: "Informe um nome claro para seu produto" }),
@@ -124,6 +127,50 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function deleteProduct(productId: number) {
+    try {
+      setIsLoading(true);
+      await api.delete(`/produtos/${productId}`);
+      alert("Produto deletado com sucesso!");
+      fetchProducts();
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        alert(
+          e.response?.data?.message || "Não foi possível deletar o produto."
+        );
+        return;
+      }
+      alert("Não foi possível deletar o produto.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function updateProduct(data: RegisterProductData) {
+    try {
+      setIsLoading(true);
+      const validatedData = productSchema.parse(data);
+
+      await api.put("/produtos", validatedData);
+
+      alert("Produto atualizado com sucesso!");
+      fetchProducts();
+    } catch (e) {
+      if (e instanceof ZodError) {
+        alert(e.errors[0].message);
+        return;
+      }
+      if (e instanceof AxiosError) {
+        const errorMessage = e.response?.data?.message || e.message;
+        alert(errorMessage);
+        return;
+      }
+      alert("Não foi possível atualizar o produto.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -142,6 +189,8 @@ export function ProductProvider({ children }: { children: ReactNode }) {
         category,
         setCategory,
         registerProduct,
+        deleteProduct,
+        updateProduct,
       }}
     >
       {children}
