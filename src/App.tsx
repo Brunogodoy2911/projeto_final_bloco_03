@@ -1,5 +1,10 @@
+import { ProductProvider } from "./contexts/ProductsContext";
 import { Routes } from "./routes";
 
 export function App() {
-  return <Routes />;
+  return (
+    <ProductProvider>
+      <Routes />
+    </ProductProvider>
+  );
 }
