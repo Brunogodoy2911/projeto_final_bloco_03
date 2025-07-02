@@ -3,7 +3,7 @@ import { Github, Linkedin, Pill } from "lucide-react";
 export function Footer() {
   return (
     <footer className="bg-gray-800 text-white mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="col-span-1 md:col-span-2 border-b-2 border-gray-700 pb-8">
           <div>
             <span className="flex gap-2">
