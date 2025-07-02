@@ -8,8 +8,11 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Button } from "../components/Button";
+import { useNavigate } from "react-router";
 
 export function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full min-h-screen flex flex-col bg-gray-50">
       <div className="flex flex-col justify-center items-center text-center py-20 px-4">
@@ -21,11 +24,14 @@ export function Home() {
           produtos de saúde com os melhores preços e entrega rápida.
         </p>
         <div className="flex flex-wrap justify-center items-center gap-4">
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => navigate("/products")}>
             <Package />
             Ver Produtos
           </Button>
-          <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
+          <Button
+            className="gap-2 bg-blue-600 hover:bg-blue-700"
+            onClick={() => navigate("/categories")}
+          >
             <Tag />
             Categorias
           </Button>

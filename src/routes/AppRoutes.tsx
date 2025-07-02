@@ -1,7 +1,10 @@
 import { Route, Routes } from "react-router";
-import { AppLayout } from "../components/AppLayout";
-import { Home } from "../pages/Home";
+
+import { NewProduct } from "../components/NewProduct";
 import { NotFound } from "../components/NotFound";
+import { AppLayout } from "../components/AppLayout";
+
+import { Home } from "../pages/Home";
 import { Products } from "../pages/Products";
 import { Categories } from "../pages/Categories";
 
@@ -11,6 +14,7 @@ export function AppRoutes() {
       <Route path="/" element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/newProduct" element={<NewProduct />} />
         <Route path="/categories" element={<Categories />} />
       </Route>
 
