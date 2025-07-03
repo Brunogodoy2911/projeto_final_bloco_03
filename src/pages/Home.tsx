@@ -113,7 +113,7 @@ export function Home() {
             <p className="text-sm text-gray-600">Organize por categoria</p>
           </a>
           <a
-            href="/cart"
+            href="/newProduct"
             className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center group block"
           >
             <Plus className="text-purple-600 h-8 w-8 mx-auto mb-3 group-hover:scale-110 transition-transform" />
